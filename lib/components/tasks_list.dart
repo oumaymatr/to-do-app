@@ -3,8 +3,20 @@ import 'task_tile.dart';
 import 'package:todoapp_flutter/services/task_data.dart';
 import 'package:provider/provider.dart';
 
-class TasksList extends StatelessWidget {
+class TasksList extends StatefulWidget {
   const TasksList({super.key});
+
+  @override
+  State<TasksList> createState() => _TasksListState();
+}
+
+class _TasksListState extends State<TasksList> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch tasks when the widget is initialized
+    Provider.of<TaskData>(context, listen: false).fetchTasks();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +76,10 @@ void _showModifyDialog(BuildContext context, TaskData taskData, int index) {
             onPressed: () {
               String newTaskTitle = controller.text.trim();
               if (newTaskTitle.isNotEmpty) {
-                taskData.modifyTask(index, newTaskTitle);
+                String taskId =
+                    taskData.tasks[index].id; // Extract the ID of the task
+                taskData.modifyTask(
+                    taskId, newTaskTitle); // Pass the ID to modifyTask
                 Navigator.of(context).pop(); // Close the dialog
               }
             },

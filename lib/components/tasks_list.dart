@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'task_tile.dart';
 import 'package:todoapp_flutter/services/task_data.dart';
@@ -14,8 +15,12 @@ class _TasksListState extends State<TasksList> {
   @override
   void initState() {
     super.initState();
-    // Fetch tasks when the widget is initialized
-    Provider.of<TaskData>(context, listen: false).fetchTasks();
+    _fetchAndScheduleNotifications();
+  }
+
+  void _fetchAndScheduleNotifications() async {
+    await Provider.of<TaskData>(context, listen: false).fetchTasks();
+    _scheduleNotifications();
   }
 
   @override
@@ -43,6 +48,23 @@ class _TasksListState extends State<TasksList> {
           itemCount: taskData.taskCount,
         );
       },
+    );
+  }
+
+  void _scheduleNotifications() async {
+    // Calculate the number of tasks remaining
+    int remainingTasks =
+        Provider.of<TaskData>(context, listen: false).taskCount;
+
+    // Create a notification
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 10,
+        channelKey: 'basic_channel',
+        title: 'Tasks Reminder',
+        body: "You're almost there! Just $remainingTasks tasks to go.",
+      ),
+      schedule: NotificationInterval(interval: 60 * 60),
     );
   }
 }

@@ -1,7 +1,9 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:todoapp_flutter/screens/login.dart';
+import 'services/localization.dart';
+import 'screens/language_selection.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:todoapp_flutter/services/task_data.dart';
 import 'firebase_options.dart';
@@ -36,7 +38,16 @@ class MyApp extends StatelessWidget {
       create: (context) => TaskData(),
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Login(),
+        localizationsDelegates: [
+          LocalizationDelegate(),
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale('en', 'US'),
+          Locale('fr', 'FR'),
+        ],
+        home: LanguageSelectionScreen(),
       ),
     );
   }

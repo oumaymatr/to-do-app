@@ -64,7 +64,7 @@ class _TasksListState extends State<TasksList> {
         title: 'Tasks Reminder',
         body: "You're almost there! Just $remainingTasks tasks to go.",
       ),
-      schedule: NotificationInterval(interval: 60 * 60),
+      schedule: NotificationInterval(interval: 30),
     );
   }
 }

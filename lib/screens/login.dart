@@ -5,9 +5,11 @@ import 'package:todoapp_flutter/screens/task_screen.dart';
 import 'register.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:todoapp_flutter/components/auth.dart';
+import 'package:todoapp_flutter/services/localization.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  final Locale locale;
+  const Login({super.key, required this.locale});
 
   @override
   State<Login> createState() => _LoginState();
@@ -25,33 +27,27 @@ class _LoginState extends State<Login> {
   late String password;
 
   bool showSpinner = false;
-  Future<void> _signInWithGoogle() async {
+  Future<void> _signInWithGoogle(Locale locale) async {
     try {
-      await AuthService()
-          .signInWithGoogle(); // Call signInWithGoogle from AuthService
-      // Navigate to the forum page after successful sign-in
+      await AuthService().signInWithGoogle();
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const TaskScreen()),
+        MaterialPageRoute(builder: (context) => TaskScreen(locale: locale)),
       );
     } catch (e) {
       print("Error signing in with Google: $e");
-      // Handle sign-in errors here
     }
   }
 
-  Future<void> _signInWithFacebook() async {
+  Future<void> _signInWithFacebook(Locale locale) async {
     try {
-      await AuthService()
-          .signInWithFacebook(); // Call signInWithGoogle from AuthService
-      // Navigate to the forum page after successful sign-in
+      await AuthService().signInWithFacebook();
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const TaskScreen()),
+        MaterialPageRoute(builder: (context) => TaskScreen(locale: locale)),
       );
     } catch (e) {
       print("Error signing in with Facebook: $e");
-      // Handle sign-in errors here
     }
   }
 
@@ -103,6 +99,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = Localization(widget.locale);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -198,7 +195,7 @@ class _LoginState extends State<Login> {
                       ),
                       fillColor: Colors.grey.shade200,
                       filled: true,
-                      hintText: 'Password',
+                      hintText: localization.password!,
                       hintStyle: TextStyle(
                         color: Colors.grey[500],
                         fontFamily: "ZenOldMincho",
@@ -220,7 +217,7 @@ class _LoginState extends State<Login> {
                           _forgotPassword(),
                         },
                         child: Text(
-                          'Forgot Password?',
+                          localization.forgotPassword!,
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontFamily: "ZenOldMincho",
@@ -246,7 +243,8 @@ class _LoginState extends State<Login> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const TaskScreen()),
+                              builder: (context) =>
+                                  TaskScreen(locale: widget.locale)),
                         );
                         setState(() {
                           showSpinner = false;
@@ -260,15 +258,15 @@ class _LoginState extends State<Login> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text(
-                              'User does not exist',
+                            title: Text(
+                              localization.userNotExistTitle!,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20),
                             ),
-                            content: const Text(
-                              'Perhaps there was a typographical error. Please consider re-entering the information and retrying.',
+                            content: Text(
+                              localization.userNotExistContent!,
                               style:
                                   TextStyle(color: Colors.black, fontSize: 16),
                             ),
@@ -277,8 +275,8 @@ class _LoginState extends State<Login> {
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text(
-                                  'Retry',
+                                child: Text(
+                                  localization.retry!,
                                   style: TextStyle(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.bold,
@@ -299,10 +297,10 @@ class _LoginState extends State<Login> {
                       color: Colors.lightBlue,
                       borderRadius: BorderRadius.circular(50),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        "Log In",
-                        style: TextStyle(
+                        localization.login!,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontFamily: "ZenOldMincho",
@@ -329,7 +327,7 @@ class _LoginState extends State<Login> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: Text(
-                          'Or continue with',
+                          localization.orContinueWith!,
                           style: TextStyle(
                             color: Colors.grey[700],
                             fontFamily: "ZenOldMincho",
@@ -355,7 +353,7 @@ class _LoginState extends State<Login> {
                       // google button
                       SquareTile(
                           onTap: () async {
-                            await _signInWithGoogle();
+                            await _signInWithGoogle(widget.locale);
                           },
                           imagePath: 'assets/images/google.png'),
 
@@ -364,7 +362,7 @@ class _LoginState extends State<Login> {
                       // facebook button
                       SquareTile(
                           onTap: () async {
-                            await _signInWithFacebook();
+                            await _signInWithFacebook(widget.locale);
                           },
                           imagePath: 'assets/images/facebook.png')
                     ],
@@ -378,7 +376,7 @@ class _LoginState extends State<Login> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Not a member?',
+                      localization.notAMember!,
                       style: TextStyle(
                         color: Colors.grey[700],
                         fontFamily: "ZenOldMincho",
@@ -390,11 +388,12 @@ class _LoginState extends State<Login> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Register()),
+                              builder: (context) =>
+                                  Register(locale: widget.locale)),
                         );
                       },
-                      child: const Text(
-                        'Register now',
+                      child: Text(
+                        localization.registerNow!,
                         style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,

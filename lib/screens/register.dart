@@ -4,9 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'task_screen.dart';
 import 'package:todoapp_flutter/components/auth.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:todoapp_flutter/services/localization.dart';
 
 class Register extends StatefulWidget {
-  const Register({super.key});
+  final Locale locale;
+  const Register({super.key, required this.locale});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -23,24 +25,26 @@ class _RegisterState extends State<Register> {
 
   bool showSpinner = false;
 
-  Future<void> _signInWithGoogle() async {
+  Future<void> _signInWithGoogle(Locale locale) async {
     try {
       await AuthService().signInWithGoogle();
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const TaskScreen()),
+        MaterialPageRoute(
+            builder: (context) => TaskScreen(locale: widget.locale)),
       );
     } catch (e) {
       print("Error signing in with Google: $e");
     }
   }
 
-  Future<void> _signInWithFacebook() async {
+  Future<void> _signInWithFacebook(Locale locale) async {
     try {
       await AuthService().signInWithFacebook();
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const TaskScreen()),
+        MaterialPageRoute(
+            builder: (context) => TaskScreen(locale: widget.locale)),
       );
     } catch (e) {
       print("Error signing in with Facebook: $e");
@@ -49,6 +53,7 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = Localization(widget.locale);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -140,7 +145,7 @@ class _RegisterState extends State<Register> {
                       ),
                       fillColor: Colors.grey.shade200,
                       filled: true,
-                      hintText: 'Password',
+                      hintText: localization.password!,
                       hintStyle: TextStyle(
                         color: Colors.grey[500],
                         fontFamily: "ZenOldMincho",
@@ -167,7 +172,7 @@ class _RegisterState extends State<Register> {
                       ),
                       fillColor: Colors.grey.shade200,
                       filled: true,
-                      hintText: 'Confirm Password',
+                      hintText: localization.confirmPassword!,
                       hintStyle: TextStyle(
                         color: Colors.grey[500],
                         fontFamily: "ZenOldMincho",
@@ -187,8 +192,8 @@ class _RegisterState extends State<Register> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text(
-                              "Passwords do not match",
+                            title: Text(
+                              localization.passwordsDoNotMatch!,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -200,8 +205,8 @@ class _RegisterState extends State<Register> {
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text(
-                                  "Retry",
+                                child: Text(
+                                  localization.retry!,
                                   style: TextStyle(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.bold,
@@ -224,7 +229,8 @@ class _RegisterState extends State<Register> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const TaskScreen()),
+                                builder: (context) =>
+                                    TaskScreen(locale: widget.locale)),
                           );
                         }
                       } on FirebaseAuthException catch (e) {
@@ -233,16 +239,16 @@ class _RegisterState extends State<Register> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text(
-                                  "Error",
+                                title: Text(
+                                  localization.error!,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
                                   ),
                                 ),
-                                content: const Text(
-                                  "The account already exists for that email.",
+                                content: Text(
+                                  localization.theAccountAlreadyExists!,
                                 ),
                                 actions: <Widget>[
                                   TextButton(
@@ -279,9 +285,9 @@ class _RegisterState extends State<Register> {
                         color: Colors.lightBlue,
                         borderRadius: BorderRadius.circular(50),
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          "Register",
+                          localization.register!,
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -308,7 +314,7 @@ class _RegisterState extends State<Register> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: Text(
-                          'Or continue with',
+                          localization.orContinueWith!,
                           style: TextStyle(
                             color: Colors.grey[700],
                             fontFamily: "ZenOldMincho",
@@ -331,12 +337,12 @@ class _RegisterState extends State<Register> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SquareTile(
-                        onTap: () => _signInWithGoogle(),
+                        onTap: () => _signInWithGoogle(widget.locale),
                         imagePath: 'assets/images/google.png',
                       ),
                       const SizedBox(width: 15),
                       SquareTile(
-                        onTap: () => _signInWithFacebook(),
+                        onTap: () => _signInWithFacebook(widget.locale),
                         imagePath: 'assets/images/facebook.png',
                       ),
                     ],
@@ -348,7 +354,7 @@ class _RegisterState extends State<Register> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Already have an account?',
+                      localization.already!,
                       style: TextStyle(
                         color: Colors.grey[700],
                         fontFamily: "ZenOldMincho",
@@ -359,8 +365,8 @@ class _RegisterState extends State<Register> {
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: const Text(
-                        'Login now',
+                      child: Text(
+                        localization.loginNow!,
                         style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todoapp_flutter/services/task_data.dart';
+import 'package:todoapp_flutter/services/localization.dart';
 
 class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen({super.key});
+  final Locale locale;
+  const AddTaskScreen({super.key, required this.locale});
   @override
   State<AddTaskScreen> createState() => _AddTaskScreenState();
 }
@@ -12,15 +14,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   String newTaskTitle = '';
   @override
   Widget build(BuildContext context) {
+    final localization = Localization(widget.locale);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
-            "Add Task",
+          Text(
+            localization.addTask!,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.lightBlue, fontSize: 30),
+            style: const TextStyle(color: Colors.lightBlue, fontSize: 30),
           ),
           TextField(
             autofocus: true,
@@ -46,7 +49,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     .addTask(newTaskTitle);
                 Navigator.pop(context);
               },
-              child: const Text("Add"),
+              child: Text(localization.add!),
             ),
           )
         ],

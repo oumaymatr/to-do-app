@@ -3,21 +3,29 @@ import 'package:provider/provider.dart';
 import '/components/tasks_list.dart';
 import 'add_task_screen.dart';
 import 'package:todoapp_flutter/services/task_data.dart';
+import 'package:todoapp_flutter/services/localization.dart';
 
 bool isChecked = false;
 
-class TaskScreen extends StatelessWidget {
-  const TaskScreen({super.key});
+class TaskScreen extends StatefulWidget {
+  final Locale locale;
+  const TaskScreen({super.key, required this.locale});
 
   @override
+  State<TaskScreen> createState() => _TaskScreenState();
+}
+
+class _TaskScreenState extends State<TaskScreen> {
+  @override
   Widget build(BuildContext context) {
+    final localization = Localization(widget.locale);
     return Scaffold(
       backgroundColor: Colors.lightBlueAccent,
       floatingActionButton: FloatingActionButton(
         onPressed: () => {
           showModalBottomSheet(
             context: context,
-            builder: (context) => const AddTaskScreen(),
+            builder: (context) => AddTaskScreen(locale: widget.locale),
           ),
         },
         backgroundColor: Colors.lightBlueAccent,
@@ -62,7 +70,8 @@ class TaskScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${Provider.of<TaskData>(context).taskCount} tasks",
+                  localization.tasks(Provider.of<TaskData>(context).taskCount)!,
+                  //"${Provider.of<TaskData>(context).taskCount} tasks",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,

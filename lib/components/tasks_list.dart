@@ -52,11 +52,9 @@ class _TasksListState extends State<TasksList> {
   }
 
   void _scheduleNotifications() async {
-    // Calculate the number of tasks remaining
     int remainingTasks =
         Provider.of<TaskData>(context, listen: false).taskCount;
 
-    // Create a notification
     AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 10,
@@ -87,7 +85,7 @@ void _showModifyDialog(BuildContext context, TaskData taskData, int index) {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
+              Navigator.of(context).pop();
             },
             child: const Text(
               "Cancel",
@@ -98,11 +96,9 @@ void _showModifyDialog(BuildContext context, TaskData taskData, int index) {
             onPressed: () {
               String newTaskTitle = controller.text.trim();
               if (newTaskTitle.isNotEmpty) {
-                String taskId =
-                    taskData.tasks[index].id; // Extract the ID of the task
-                taskData.modifyTask(
-                    taskId, newTaskTitle); // Pass the ID to modifyTask
-                Navigator.of(context).pop(); // Close the dialog
+                String taskId = taskData.tasks[index].id;
+                taskData.modifyTask(taskId, newTaskTitle);
+                Navigator.of(context).pop();
               }
             },
             child:

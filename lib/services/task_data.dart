@@ -32,7 +32,6 @@ class TaskData extends ChangeNotifier {
       await fetchTasks();
     } catch (e) {
       print('Error adding task: $e');
-      // Handle error gracefully
     }
   }
 
@@ -43,10 +42,9 @@ class TaskData extends ChangeNotifier {
           .collection(_collectionName)
           .doc(task.id)
           .update({'done': !task.isDone});
-      await fetchTasks(); // Refresh local tasks after updating
+      await fetchTasks();
     } catch (e) {
       print('Error updating task: $e');
-      // Handle error gracefully
     }
   }
 
@@ -56,7 +54,7 @@ class TaskData extends ChangeNotifier {
       await fetchTasks();
     } catch (e) {
       print("Error deleting task: $e");
-    } // Refresh local tasks after deletion
+    }
   }
 
   Future<void> modifyTask(String taskId, String newTaskTitle) async {
@@ -68,6 +66,6 @@ class TaskData extends ChangeNotifier {
       await fetchTasks();
     } catch (e) {
       print("Error modifying task: $e");
-    } // Refresh local tasks after modification
+    }
   }
 }
